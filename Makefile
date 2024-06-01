@@ -3,19 +3,19 @@ static: format lint mypy
 
 .PHONY: format
 format:
-	isort rs-climate-lab tests
+	isort rsclimatelab tests
 
 .PHONY: lint
 lint:
-	flake8 rs-climate-lab tests
+	flake8 rsclimatelab tests
 
 .PHONY: mypy
 mypy:
-	mypy rs-climate-lab tests
+	mypy rsclimatelab tests
 
 .PHONY: test
 test:
-	pytest --cov=rs-climate-lab --cov-branch tests
+	pytest --cov=rsclimatelab --cov-branch tests
 
 .PHONY: ci
 ci: format lint mypy test

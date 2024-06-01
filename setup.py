@@ -15,7 +15,7 @@ development_requires: List[str] = [
 ]
 
 setuptools.setup(
-    name="rs-climate-lab",
+    name="rsclimatelab",
     version="0.1.0",
     author="Christian S. Perone",
     author_email="christian.perone@gmail.com",
@@ -30,7 +30,7 @@ setuptools.setup(
         'dev': development_requires,
     },
     project_urls={
-        "Bug Tracker": "https://github.com/perone/feste/issues",
+        "Bug Tracker": "https://github.com/perone/rs-climate-lab/issues",
     },
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -38,6 +38,6 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     packages=setuptools.find_packages(),
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     include_package_data=True,
 )

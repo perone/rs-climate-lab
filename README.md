@@ -14,7 +14,7 @@ For questions or comments regarding the usage of this repository, please use the
 
 ## 🌟 Contributors
 
-[![rs-climate-lab contributors](https://contrib.rocks/image?repo=perone/rs-climate-lab&max=2000)](https://github.com/perone/rs-climate-lab/graphs/contributors)
+[![rs-climate-lab contributors](https://contrib.rocks/image?repo=perone/rs-climate-lab)](https://github.com/perone/rs-climate-lab/graphs/contributors)
 
 ### Logo credits
 

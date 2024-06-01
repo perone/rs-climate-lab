@@ -25,6 +25,8 @@ setuptools.setup(
     install_requires=[
         "rich>=13.7.0",
         "dask[complete]>=2024.5.2",
+        "xarray>=2024.5.0",
+        "rioxarray>=0.15.5",
     ],
     extras_require={
         'dev': development_requires,

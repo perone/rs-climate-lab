@@ -3,8 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to RS Climate Lab's documentation!
+RS Climate Lab
 ==========================================
+RS Climate Lab is a project focused on climate data and tooling
+for Rio Grande do Sul in Brazil.
 
 .. toctree::
    :maxdepth: 2

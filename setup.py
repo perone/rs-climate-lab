@@ -27,6 +27,7 @@ setuptools.setup(
         "dask[complete]>=2024.5.2",
         "xarray>=2024.5.0",
         "rioxarray>=0.15.5",
+        "click>=8.1.7",
     ],
     extras_require={
         'dev': development_requires,

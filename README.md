@@ -2,7 +2,7 @@
 
 # RS Climate Lab
 
-A project focused on climate data and tooling for **Rio Grande do Sul** in Brazil. This project was built and is maintained by community efforts.
+A project focused on climate data and tooling for **Rio Grande do Sul** in Brazil.
 
 ## 💁 Contributing
 

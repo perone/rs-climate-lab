@@ -26,3 +26,13 @@ exclude_patterns = []
 
 html_theme = 'furo'
 html_static_path = ['_static']
+html_logo = "_static/climate-lab-logo.png"
+html_theme_options = {
+    "light_css_variables": {
+        "color-sidebar-background": "#ffffff",
+    },
+    "source_repository": "https://github.com/perone/rs-climate-lab/",
+    "source_branch": "main",
+    "source_directory": "docs/",
+}
+html_title = "<nbsp></nbsp>"

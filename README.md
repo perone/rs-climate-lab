@@ -4,6 +4,16 @@
 
 A project focused on climate data and tooling for **Rio Grande do Sul** in Brazil.
 
+## 📖 Documentation
+
+Please see [here](https://rs-climate-lab.readthedocs.io) for the
+documentation about:
+
+- Installation
+- Getting started
+- Tutorials
+- API documentation
+
 ## 💁 Contributing
 
 We are extremely open to contributions, whether it be in the form of a new feature, improved infrastructure, or better documentation. Please open an issue to discuss what you want to contribute first so we can coordinate with others that might be working on the same feature.

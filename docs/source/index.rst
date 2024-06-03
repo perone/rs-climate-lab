@@ -1,18 +1,18 @@
-.. RS Climate Lab documentation master file, created by
-   sphinx-quickstart on Sat Jun  1 20:20:07 2024.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-RS Climate Lab
+RS Climate Lab (rscl)
 ==========================================
-RS Climate Lab is a project focused on climate data and tooling
-for Rio Grande do Sul in Brazil.
+RS Climate Lab (rscl) is an open-source project focused on providing 
+climate data and tooling to handle and perform analysis/reanalysis and
+data assimilation for **Rio Grande do Sul (RS) in Brazil**.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 3
 
-
+   why
+   installation
+   changelog
+   getting_started
+   api
+   license
 
 Indices and tables
 ==================

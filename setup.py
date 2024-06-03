@@ -16,7 +16,7 @@ development_requires: List[str] = [
 
 setuptools.setup(
     name="rsclimatelab",
-    version="0.1.0",
+    version="0.2.0",
     author="Christian S. Perone",
     author_email="christian.perone@gmail.com",
     description="A project focused on climate data and tooling for "
@@ -31,6 +31,8 @@ setuptools.setup(
         "cdsapi>=0.7.0",
         "pyyaml>=6.0.1",
         "pydantic>=2.7.2",
+        "geopandas>=0.14.4",
+        "pyogrio>=0.8.0",
     ],
     extras_require={
         'dev': development_requires,
@@ -46,6 +48,9 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires=">=3.10",
     include_package_data=True,
+    package_data={
+        "rsclimatelab": ["assets/*"],
+    },
     entry_points={
         'console_scripts': [
             'rscl = rsclimatelab.cli:cli',

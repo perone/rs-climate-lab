@@ -6,7 +6,7 @@ from dask.distributed import Future
 def dask_futures_stats(future_list: List[Future]) -> Dict[str, int]:
     """Grabs the status of each Dask future and return a dictionary
     with aggregated results.
-    
+
     :param future_list: list of Dask Futures
     """
     count_stats = {

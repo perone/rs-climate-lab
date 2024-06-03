@@ -5,6 +5,9 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+import sys, os
+
+sys.path.insert(0, os.path.abspath('../../'))
 
 project = 'RS Climate Lab'
 copyright = '2024, Christian S. Perone'
@@ -14,7 +17,13 @@ release = '0.1.0'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = []
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.mathjax",
+    "sphinx.ext.viewcode",
+    'sphinx.ext.githubpages',
+    'sphinx.ext.autosummary',
+]
 
 templates_path = ['_templates']
 exclude_patterns = []
@@ -36,3 +45,5 @@ html_theme_options = {
     "source_directory": "docs/",
 }
 html_title = "<nbsp></nbsp>"
+
+html_show_sourcelink = False

@@ -28,6 +28,9 @@ setuptools.setup(
         "xarray>=2024.5.0",
         "rioxarray>=0.15.5",
         "click>=8.1.7",
+        "cdsapi>=0.7.0",
+        "pyyaml>=6.0.1",
+        "pydantic>=2.7.2",
     ],
     extras_require={
         'dev': development_requires,
@@ -43,4 +46,9 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     python_requires=">=3.10",
     include_package_data=True,
+    entry_points={
+        'console_scripts': [
+            'rscl = rsclimatelab.cli:cli',
+        ]
+    }
 )

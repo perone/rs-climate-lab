@@ -1,0 +1,14 @@
+parallel_jobs: 10
+variables:
+  - total_precipitation
+  - 2m_temperature
+  - minimum_2m_air_temperature
+  - maximum_2m_air_temperature
+  - 10m_u_component_of_wind
+  - 10m_v_component_of_wind
+  - surface_pressure
+  - potential_evaporation
+  - surface_net_solar_radiation
+years:
+  start: 2020
+  end: 2022

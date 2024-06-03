@@ -16,7 +16,7 @@ development_requires: List[str] = [
 
 setuptools.setup(
     name="rsclimatelab",
-    version="0.2.0",
+    version="0.3.0",
     author="Christian S. Perone",
     author_email="christian.perone@gmail.com",
     description="A project focused on climate data and tooling for "

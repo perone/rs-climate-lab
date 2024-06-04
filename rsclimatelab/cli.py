@@ -1,12 +1,14 @@
 import importlib.resources
 import logging
 import time
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 from typing import List
 
 import cdsapi
 import click
 import geopandas as gpd
+import pandas as pd
 import yaml
 from dask.distributed import Client, LocalCluster
 from distributed.utils import silence_logging_cmgr
@@ -17,6 +19,7 @@ from rich.progress import (BarColumn, Progress, SpinnerColumn,
 
 from rsclimatelab import ecmwf
 from rsclimatelab.dask_util import dask_futures_stats
+from rsclimatelab.hydrogs import get_hidrometeorological_data
 
 console = Console()
 ASSETS_PATH = importlib.resources.files(__package__) / "assets"
@@ -46,6 +49,12 @@ def cli() -> None:
 
 @cli.group()
 def era5() -> None:
+    pass
+
+
+@cli.group()
+def hydro_gs() -> None:
+    """Hydrological Ground Stations (hydro-gs)"""
     pass
 
 
@@ -139,6 +148,84 @@ def download(config_file: Path, output_dir: Path) -> None:
         with silence_logging_cmgr(logging.CRITICAL):
             client.close()
         console.log("Dask shut down.")
+
+
+@hydro_gs.command()
+@click.argument('code')
+@click.option('--start_date', required=True, help='Start date in format dd/mm/yyyy')
+@click.option('--end_date', required=True, help='End date in format dd/mm/yyyy')
+@click.option('--filename', required=True, help='Output filename for the downloaded data')
+def download_range(code: str, start_date: str,
+                   end_date: str, filename: str) -> None:
+    """Downloads hydrological data from ground stations from ANA (https://www.gov.br/ana)."""
+    console.log(f"Downloading telemetry data for {code} from {start_date} to {end_date}...")
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(show_speed=True),
+        TimeElapsedColumn()
+    ) as progress:
+        _ = progress.add_task("[green]Downloading", total=None)
+        df = get_hidrometeorological_data(code, start_date, end_date)
+
+    console.log(f"Downloaded {len(df)} rows, saving to {filename}.")
+    df.to_parquet(filename)
+    console.log(f"File {filename} saved.")
+    console.log(f"Sample data:\n{df.tail(4)}")
+
+
+@hydro_gs.command()
+@click.argument('code')
+@click.option('--start_year', required=True, help='Start date in format yyyy')
+@click.option('--end_year', required=True, help='End date in format yyyy')
+@click.option('--filename', required=True, help='Output filename for the downloaded data')
+def download_year(code: str, start_year: str,
+                  end_year: str, filename: str) -> None:
+    """Downloads hydrological data from ground stations from ANA (https://www.gov.br/ana)."""
+    start_year_range = int(start_year)
+    end_year_range = int(end_year)
+
+    dfs = []
+    with ProcessPoolExecutor(max_workers=5) as executor:
+        futures = {
+            executor.submit(get_hidrometeorological_data, code,
+                            f"01/01/{year}", f"31/12/{year}"): year
+            for year in range(start_year_range, end_year_range + 1)
+        }
+        console.log(f"Submitted {len(futures)} download jobs, downloading...")
+
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TaskProgressColumn(show_speed=True),
+            TimeElapsedColumn(), console=console
+        ) as progress:
+            overall_task = progress.add_task("[green]All Jobs []", total=len(futures))
+
+            finished = []
+            while not progress.finished:
+                for future in as_completed(futures):
+                    finished.append(future)
+                    progress.update(overall_task, completed=len(finished))
+
+                    year = futures[future]
+                    try:
+                        df = future.result()
+                        console.log(f"Downloaded {len(df)} rows for year {year}.")
+                        dfs.append(df)
+                    except Exception as exc:
+                        console.log(f"Failed to download data for year "
+                                    f"{year} with exception: {exc}")
+
+    concat_df = pd.concat(dfs)
+    concat_df = concat_df.sort_values(by=["data_hora"])
+    concat_df.to_parquet(filename)
+
+    console.log(f"File {filename} saved.")
+    console.log(f"Sample data:\n{concat_df.tail(4)}")
 
 
 if __name__ == '__main__':

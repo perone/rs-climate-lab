@@ -32,7 +32,7 @@ setuptools.setup(
         "pyyaml>=6.0.1",
         "pydantic>=2.7.2",
         "geopandas>=0.14.4",
-        "pyogrio>=0.8.0",
+        "pyogrio>=0.5.1",
     ],
     extras_require={
         'dev': development_requires,

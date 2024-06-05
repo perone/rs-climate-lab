@@ -130,7 +130,7 @@ def download(config_file: Path, output_dir: Path) -> None:
         TaskProgressColumn(show_speed=True),
         TimeElapsedColumn()
     ) as progress:
-        overall_task = progress.add_task("[green]All Jobs []", total=len(futures))
+        overall_task = progress.add_task("[green]All Jobs", total=len(futures))
         while not progress.finished:
             job_stats = dask_futures_stats(futures)
             count_pending = job_stats["pending"]
@@ -177,7 +177,7 @@ def download_range(code: str, start_date: str,
 
 
 @hydro_gs.command()
-@click.argument('code')
+@click.argument('code', required=True)
 @click.option('--start_year', required=True, help='Start date in format yyyy')
 @click.option('--end_year', required=True, help='End date in format yyyy')
 @click.option('--filename', required=True, help='Output filename for the downloaded data')
@@ -203,7 +203,7 @@ def download_year(code: str, start_year: str,
             TaskProgressColumn(show_speed=True),
             TimeElapsedColumn(), console=console
         ) as progress:
-            overall_task = progress.add_task("[green]All Jobs []", total=len(futures))
+            overall_task = progress.add_task("[green]All Jobs", total=len(futures))
 
             finished = []
             while not progress.finished:
@@ -226,6 +226,57 @@ def download_year(code: str, start_year: str,
 
     console.log(f"File {filename} saved.")
     console.log(f"Sample data:\n{concat_df.tail(4)}")
+
+
+@hydro_gs.command()
+@click.argument("file_pattern", required=True)
+@click.option("--output", required=True, help="Output filename for the merged data")
+def merge_datasets(file_pattern: str, output: str) -> None:
+    """Merges multiple datasets into a single one."""
+    pathobj = Path(".")
+    glob = list(pathobj.glob(file_pattern))
+
+    dfs = []
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(show_speed=True),
+        TimeElapsedColumn(), console=console
+    ) as progress:
+        overall_task = progress.add_task("Processing datasets",
+                                         total=len(glob))
+        for file in glob:
+            console.log(f"Processing file {file}...")
+            df = pd.read_parquet(file)
+            df = df.rename(columns={
+                "nivel": "level_cm",
+                "data_hora": "date",
+            })
+            cod_estacao = df["cod_estacao"].unique()[0]
+            df = df.drop(columns=["cod_estacao"])
+
+            df.sort_values(by=["date"], ascending=True, inplace=True)
+            df.reset_index(drop=True, inplace=True)
+            df = df.set_index("date")
+
+            df["level_cm"] = pd.to_numeric(df["level_cm"])
+            df["vazao"] = pd.to_numeric(df["vazao"])
+            df["chuva"] = pd.to_numeric(df["chuva"])
+
+            df = df.resample("1h").mean()
+            df["cod_estacao"] = cod_estacao
+            dfs.append(df)
+
+            progress.advance(overall_task, 1.0)
+
+    with console.status("Concatenating, sorting and persisting dataset..."):
+        df = pd.concat(dfs)
+        df = df.sort_index()
+        df.to_parquet(output)
+
+    console.log(f"Wrote {len(df)} rows to {output}.")
 
 
 if __name__ == '__main__':

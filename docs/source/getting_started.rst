@@ -5,3 +5,4 @@ Getting started
    :maxdepth: 3
 
    climate_data
+   hydrological_data
